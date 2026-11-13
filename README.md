@@ -1,3 +1,5 @@
+i just really wanted 3d printing filament man
+
 # Micro Center API & CLI
 
 A direct JSON client for Micro Center's public Bloomreach Discovery catalog, with a separately enabled storefront adapter for local inventory. Unofficial; not affiliated with Micro Center.
