@@ -46,7 +46,7 @@ class DiscoveryClient:
             url,
             headers={
                 "Accept": "application/json",
-                "User-Agent": "microcenter-api-cli/0.2.0",
+                "User-Agent": "microcenter-api-cli/0.3.0",
             },
         )
         try:

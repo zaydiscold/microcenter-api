@@ -3,7 +3,12 @@ class MicroCenterError(Exception):
 
 
 class BlockedError(MicroCenterError):
-    """The storefront denied/challenged access. Stop; do not rotate identities."""
+    """Access was denied. A 403 alone does not establish a browser challenge."""
+
+    def __init__(self, message, *, status=None, challenge_detected=None):
+        self.status = status
+        self.challenge_detected = challenge_detected
+        super().__init__(message)
 
 
 class ParseError(MicroCenterError):

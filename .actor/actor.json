@@ -1,0 +1,14 @@
+{
+  "actorSpecification": 1,
+  "name": "microcenter-native-api",
+  "title": "Micro Center Native API — Store Stock and Prices",
+  "description": "Read-only, browser-free product discovery and verified store availability/prices. Explicit stock booleans, timestamps and bounded sequential requests.",
+  "version": "0.3",
+  "buildTag": "latest",
+  "dockerfile": "./Dockerfile",
+  "readme": "./README.md",
+  "input": "./input_schema.json",
+  "output": "./output_schema.json",
+  "minMemoryMbytes": 256,
+  "maxMemoryMbytes": 512
+}

@@ -1,0 +1,8 @@
+{
+  "actorOutputSchemaVersion": 1,
+  "title": "Micro Center observations",
+  "properties": {
+    "dataset": {"type": "string", "title": "Product/store observations", "template": "{{links.apiDefaultDatasetUrl}}/items"},
+    "summary": {"type": "string", "title": "Completeness and limits", "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY"}
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "title": "Micro Center store stock and prices",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "mode": {
+      "title": "Operation",
+      "type": "string",
+      "editor": "select",
+      "enum": [
+        "search",
+        "category",
+        "product"
+      ],
+      "default": "search",
+      "description": "Search keywords, scan a category, or look up exact product IDs."
+    },
+    "query": {
+      "title": "Search keywords",
+      "type": "string",
+      "editor": "textfield",
+      "default": "filament",
+      "description": "Used in search mode. Results are global catalog candidates, verified separately at your stores."
+    },
+    "categoryId": {
+      "title": "Category ID",
+      "type": "string",
+      "editor": "textfield",
+      "description": "Required in category mode. Filaments/resins754, graphics cards518, desktop computers106."
+    },
+    "productIds": {
+      "title": "Product IDs",
+      "type": "array",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "description": "Required in product mode. Numeric product IDs, not store SKUs. Up to1000."
+    },
+    "storeIds": {
+      "title": "Store IDs",
+      "type": "array",
+      "editor": "stringList",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "195"
+      ],
+      "description": "Select1\u20134 stores. Santa Clara195; Tustin101; Miami185. One row per product/store."
+    },
+    "maxProducts": {
+      "title": "Maximum candidate products",
+      "type": "integer",
+      "editor": "number",
+      "minimum": 1,
+      "maximum": 1000,
+      "default": 50,
+      "description": "Limits unique products to examine before store filtering; requests are sequential."
+    },
+    "maxResults": {
+      "title": "Maximum output rows",
+      "type": "integer",
+      "editor": "number",
+      "minimum": 1,
+      "maximum": 4000,
+      "default": 200,
+      "description": "Stops after this many product/store observations are saved."
+    },
+    "includeOutOfStock": {
+      "title": "Include out-of-stock observations",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": true,
+      "description": "False filters unavailable rows. Excluded rows still require upstream requests but do not create billable dataset items."
+    },
+    "includeRaw": {
+      "title": "Include raw product fields",
+      "type": "boolean",
+      "editor": "checkbox",
+      "default": false,
+      "description": "Adds vendor specs, ratings aggregates and other raw metadata. No numerical quantities or review bodies are provided."
+    },
+    "startPage": {
+      "title": "Starting catalog page",
+      "type": "integer",
+      "editor": "number",
+      "minimum": 1,
+      "maximum": 51,
+      "default": 1,
+      "description": "Advanced: global candidate pagination,200 products per page. Starting after page1 is a partial catalog window."
+    }
+  },
+  "required": [
+    "mode",
+    "storeIds"
+  ]
+}

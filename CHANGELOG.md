@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+- Apify Actor adapter with bounded search/category/product operations, multi-store observations, input/output schemas and Docker packaging.
+- Stream dataset rows with synthetic per-item charging; stop before work beyond a spending/result limit. Refuse restart replay over existing output to prevent duplicate paid rows.
+- Deduplicate candidates and distinguish complete inventories from partial windows; reject invalid non-object input before requests.
+- Local SDK and Linux Docker execution verified; real SDK local PPE simulations cover zero/one/two-row budgets. Cloud access and public Store publication remain unverified/pending account selection.
+- Preserve native HTTP denial status and conservative challenge-marker diagnostics, without exposing response bodies or automatically retrying denials.
+
 ## 0.2.0
 
 - Native, cookie-free JSON lookup for store-sensitive availability, store SKU and current/original prices; no browser fallback for default store requests.

@@ -49,7 +49,7 @@ def create_app(config=None, *, client_factory=Client):
 
     app = FastAPI(
         title="Micro Center API",
-        version="0.2.0",
+        version="0.3.0",
         description="Unofficial read-only catalog, store availability and prices. Cached, sequential, anonymously accessed.",
         lifespan=lifespan,
     )

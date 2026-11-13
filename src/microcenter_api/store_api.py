@@ -28,7 +28,7 @@ def http_attributes(url, form):
             "Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
             "X-Requested-With": "XMLHttpRequest",
-            "User-Agent": "microcenter-api-cli/0.2.0",
+            "User-Agent": "microcenter-api-cli/0.3.0",
         },
     )
     try:
@@ -42,8 +42,23 @@ def http_attributes(url, form):
         if e.code == 429:
             raise RateLimitedError(e.headers.get("Retry-After")) from e
         if e.code in (401, 403):
+            try:
+                sample = e.read(32768).decode("utf-8", errors="replace").lower()
+            except (OSError, TimeoutError):
+                sample = ""
+            challenged = e.headers.get(
+                "cf-mitigated", ""
+            ).lower() == "challenge" or any(
+                token in sample
+                for token in ("challenge-platform", "cf-chl-", "just a moment")
+            )
+            description = (
+                "challenge detected" if challenged else "challenge not established"
+            )
             raise BlockedError(
-                "Native product API denied this request; stopping without a browser fallback"
+                f"Native product API returned HTTP {e.code} ({description}); stopping without a browser fallback",
+                status=e.code,
+                challenge_detected=challenged,
             ) from e
         raise MicroCenterError(f"Native product API returned HTTP {e.code}") from e
     except (urllib.error.URLError, TimeoutError) as e:

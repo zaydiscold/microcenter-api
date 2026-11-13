@@ -129,3 +129,7 @@ No cart mutation, checkout, reservation, coupon redemption, SMS, account records
 - [Every observed native product field](docs/native-fields.md) and [machine-readable field map](docs/native-fields.json)
 - [Source-discovered route inventory with confidence labels](docs/endpoint-surfaces.json)
 - [Existing API/MCP services and open-source clients](docs/related-projects.md), with [pinned source records](docs/research-sources.json)
+
+## Apify Actor
+
+A bounded, streaming Actor adapter is included for store-aware search, category scans and exact product lookups. Its schemas, Docker build and local SDK/container execution are tested. Cloud-origin access and marketplace publication require separate validation; no paid listing is claimed. See [Apify setup, billing behavior and launch status](docs/apify.md) and [the proposed Actor listing](.actor/README.md).

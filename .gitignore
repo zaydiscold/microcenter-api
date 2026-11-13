@@ -10,3 +10,6 @@ dist/
 .runtime*
 scan*.json
 *.sqlite*
+
+storage/
+.actor/.local/

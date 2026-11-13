@@ -220,3 +220,38 @@ def test_store_scan_rejects_string_boolean_before_network(tmp_path):
     c = Client(cache_dir=tmp_path, fetch=lambda _: pytest.fail("must validate first"))
     with pytest.raises(ValueError):
         c.scan(store="195", in_stock="false")
+
+
+@pytest.mark.parametrize(
+    "headers,body,challenged",
+    [
+        ({"cf-mitigated": "challenge"}, b"<html>challenge</html>", True),
+        ({}, b"<html>Forbidden</html>", False),
+    ],
+)
+def test_denial_diagnostics_do_not_conflate_every_403_with_cloudflare(
+    monkeypatch, headers, body, challenged
+):
+    import io
+    from urllib.error import HTTPError
+    from microcenter_api.errors import BlockedError
+    from microcenter_api.store_api import http_attributes
+    import microcenter_api.store_api as api
+
+    def denied(*args, **kwargs):
+        raise HTTPError(
+            "https://www.microcenter.com/example",
+            403,
+            "Forbidden",
+            headers,
+            io.BytesIO(body),
+        )
+
+    monkeypatch.setattr(api.urllib.request, "urlopen", denied)
+    with pytest.raises(BlockedError) as caught:
+        http_attributes(
+            "https://www.microcenter.com/example",
+            {"type": "product", "product_id": "1"},
+        )
+    assert caught.value.status == 403 and caught.value.challenge_detected is challenged
+    assert "HTTP 403" in str(caught.value)

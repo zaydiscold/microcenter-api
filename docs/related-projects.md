@@ -41,3 +41,14 @@ GitHub repository searches for `microcenter mcp` returned no matches; `microcent
 3. Read the listed source files from the pinned commit via raw.githubusercontent.com. Inspect HTTP calls and selectors without running source.
 4. Compare the native JSON fields with vendor documentation; keep advertised, source-observed and live-verified states distinct.
 5. Reproduce the native endpoint using the request in api-map.md and native-fields.md. Reuse the paced CLI/cache for repeated calls.
+
+
+## November 13 follow-up: actual access checks and marketplace metadata
+
+API.SH's product endpoint returned 401 without its x-api-key header. Scavio's product endpoint returned 401 without Authorization. This verifies access requirements, not the advertised product output. No competitor account or paid run was created.
+
+Apify public Store/API metadata was retrieved without login. Direct Micro Center listings included sian.agency/microcenter-product-scraper, fortuitous_pirate/microcenter-scraper, memo23/microcenter-product-scraper, pyralislabs/microcenter-ai-instore-sniper and quarterly_jingo/microcenter-scraper. Their configured pricing events and recent run statistics provide stronger evidence of active listings than marketing text alone. Run-success metadata still does not establish that quantities, prices or completeness are correct. Configured FREE and BRONZE prices differ on some Actors; compare actual event/tier prices rather than only the headline “from” price. We did not run these paid Actors.
+
+The [Firecrawl Micro Center provider](https://www.firecrawl.dev/alexandria/microcenter-com) advertises five typed capabilities (product, reviews, stores, SKU lookup and search), each listed at 5 credits per execution. Actual search_products(category Filaments & Resins|754,store 195) and get_product(DGX 699008,store 195) both returned provider 502 errors. Retrying the known-product call also returned 502. Receipts reported 0 credits charged. The advertised contract is therefore a useful field/schema reference, but it did not supply a working independent data check in this run.
+
+The native client independently completed 90 selected high-end products across Santa Clara 195 and Tustin 101, 180 observations. Availability differed by store and some returned native prices differed, including the PNY RTX PRO 6000. This validates the store parameter beyond the earlier filament control. Filament refresh attempts encountered transient HTTP 403 responses and stopped; later single diagnostic requests for those IDs returned 200 JSON. A 403 alone is not proof of a Cloudflare challenge or proof of a network-change cause.
