@@ -1,0 +1,39 @@
+{
+  "observed_date": "2026-11-12",
+  "direct_backend": {
+    "endpoint": "https://core.dxpapi.com/api/v1/core/",
+    "account_id": 7835,
+    "domain_key": "microcenter",
+    "auth_key": "empty; no private credential used",
+    "browser_required": false,
+    "verified": [
+      "keyword search",
+      "category search",
+      "facets",
+      "pid ascending sort",
+      "offset pagination",
+      "exact PID lookup"
+    ],
+    "unverified": [
+      "store quantities",
+      "store-specific prices",
+      "original shelf price",
+      "SKU field"
+    ]
+  },
+  "storefront_fallback": {
+    "explicit_opt_in": true,
+    "format": "HTML",
+    "browser_required": true
+  },
+  "validation": {
+    "native_local_listing_count": 647,
+    "direct_global_category_count": 749,
+    "local_ids_found_in_direct_catalog": 647,
+    "price_matches": 646,
+    "price_mismatches": 1,
+    "direct_http_requests": 4,
+    "direct_response_bytes": 473328,
+    "native_response_bytes": 7216642
+  }
+}

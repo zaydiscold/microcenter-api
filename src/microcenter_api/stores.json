@@ -1,0 +1,167 @@
+{
+  "observed_at": "2026-11-12",
+  "anonymous": true,
+  "source": "https://www.microcenter.com/assets/ajax/StoreChange.aspx",
+  "stores": [
+    {
+      "id": "205",
+      "name": "AZ - Phoenix",
+      "shipping": false
+    },
+    {
+      "id": "195",
+      "name": "CA - Santa Clara",
+      "shipping": false
+    },
+    {
+      "id": "101",
+      "name": "CA - Tustin",
+      "shipping": false
+    },
+    {
+      "id": "181",
+      "name": "CO - Denver",
+      "shipping": false
+    },
+    {
+      "id": "185",
+      "name": "FL - Miami",
+      "shipping": false
+    },
+    {
+      "id": "065",
+      "name": "GA - Duluth",
+      "shipping": false
+    },
+    {
+      "id": "041",
+      "name": "GA - Marietta",
+      "shipping": false
+    },
+    {
+      "id": "151",
+      "name": "IL - Chicago",
+      "shipping": false
+    },
+    {
+      "id": "025",
+      "name": "IL - Westmont",
+      "shipping": false
+    },
+    {
+      "id": "165",
+      "name": "IN - Indianapolis",
+      "shipping": false
+    },
+    {
+      "id": "191",
+      "name": "KS - Overland Park",
+      "shipping": false
+    },
+    {
+      "id": "121",
+      "name": "MA - Cambridge",
+      "shipping": false
+    },
+    {
+      "id": "085",
+      "name": "MD - Rockville",
+      "shipping": false
+    },
+    {
+      "id": "125",
+      "name": "MD - Parkville",
+      "shipping": false
+    },
+    {
+      "id": "055",
+      "name": "MI - Madison Heights",
+      "shipping": false
+    },
+    {
+      "id": "045",
+      "name": "MN - St. Louis Park",
+      "shipping": false
+    },
+    {
+      "id": "095",
+      "name": "MO - Brentwood",
+      "shipping": false
+    },
+    {
+      "id": "175",
+      "name": "NC - Charlotte",
+      "shipping": false
+    },
+    {
+      "id": "075",
+      "name": "NJ - North Jersey",
+      "shipping": false
+    },
+    {
+      "id": "171",
+      "name": "NY - Westbury",
+      "shipping": false
+    },
+    {
+      "id": "115",
+      "name": "NY - Brooklyn",
+      "shipping": false
+    },
+    {
+      "id": "145",
+      "name": "NY - Flushing",
+      "shipping": false
+    },
+    {
+      "id": "105",
+      "name": "NY - Yonkers",
+      "shipping": false
+    },
+    {
+      "id": "141",
+      "name": "OH - Columbus",
+      "shipping": false
+    },
+    {
+      "id": "051",
+      "name": "OH - Mayfield Heights",
+      "shipping": false
+    },
+    {
+      "id": "071",
+      "name": "OH - Sharonville",
+      "shipping": false
+    },
+    {
+      "id": "061",
+      "name": "PA - St. Davids",
+      "shipping": false
+    },
+    {
+      "id": "155",
+      "name": "TX - Houston",
+      "shipping": false
+    },
+    {
+      "id": "215",
+      "name": "TX - Austin",
+      "shipping": false
+    },
+    {
+      "id": "131",
+      "name": "TX - Dallas",
+      "shipping": false
+    },
+    {
+      "id": "081",
+      "name": "VA - Fairfax",
+      "shipping": false
+    },
+    {
+      "id": "029",
+      "name": "Shippable Items",
+      "shipping": true
+    }
+  ]
+}

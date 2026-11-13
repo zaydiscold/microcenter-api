@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "microcenter-api-cli"
+version = "0.1.0"
+description = "Unofficial read-only Micro Center catalog, inventory, and deals API and CLI"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "Zayd"}]
+dependencies = ["beautifulsoup4>=4.12,<5"]
+
+[project.optional-dependencies]
+storefront = ["playwright>=1.48,<2", "websocket-client>=1.8,<2"]
+api = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1"]
+dev = ["pytest>=8,<10", "httpx>=0.27,<1", "build>=1,<2"]
+
+[project.scripts]
+microcenter = "microcenter_api.cli:main"
+
+[project.urls]
+Repository = "https://github.com/zaydiscold/microcenter-api"
+Issues = "https://github.com/zaydiscold/microcenter-api/issues"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/microcenter_api"]
