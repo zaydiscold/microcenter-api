@@ -1,0 +1,206 @@
+{
+  "observed_date": "2026-11-12",
+  "product_id": "660548",
+  "fields": {
+    "action": {
+      "observed_type": "str",
+      "meaning": "Request/analytics metadata; empty in product lookup."
+    },
+    "page_type": {
+      "observed_type": "str",
+      "meaning": "Request/analytics metadata; empty in product lookup."
+    },
+    "action_type": {
+      "observed_type": "str",
+      "meaning": "Request/analytics metadata; empty in product lookup."
+    },
+    "list_id": {
+      "observed_type": "str",
+      "meaning": "Request/analytics metadata; empty in product lookup."
+    },
+    "recommendation_id": {
+      "observed_type": "str",
+      "meaning": "Request/analytics metadata; empty in product lookup."
+    },
+    "item_id": {
+      "observed_type": "str",
+      "meaning": "Item identifier; matched product ID in observed samples."
+    },
+    "product_id": {
+      "observed_type": "str",
+      "meaning": "Canonical product ID; validate against the requested ID."
+    },
+    "short_sku": {
+      "observed_type": "str",
+      "meaning": "Store SKU; differs from product ID."
+    },
+    "title": {
+      "observed_type": "str",
+      "meaning": "Vendor metadata"
+    },
+    "brand": {
+      "observed_type": "str",
+      "meaning": "Vendor metadata"
+    },
+    "brand_id": {
+      "observed_type": "str",
+      "meaning": "Brand identifier."
+    },
+    "price": {
+      "observed_type": "str",
+      "meaning": "Current item price in requested store context; decimal string, not cents."
+    },
+    "original_price": {
+      "observed_type": "str",
+      "meaning": "Original price; do not assume it is a historical market price."
+    },
+    "discount": {
+      "observed_type": "str",
+      "meaning": "Reported absolute dollar discount; preserve raw value."
+    },
+    "in_stock": {
+      "observed_type": "str",
+      "meaning": "Store-sensitive boolean encoded as True/False strings; not a quantity."
+    },
+    "is_on_web": {
+      "observed_type": "str",
+      "meaning": "Web listing flag."
+    },
+    "category_1": {
+      "observed_type": "str",
+      "meaning": "Category label and ID separated by |."
+    },
+    "coordinate_group": {
+      "observed_type": "str",
+      "meaning": "Undocumented merchandising coordinate; not a verified aisle/bin location."
+    },
+    "map": {
+      "observed_type": "str",
+      "meaning": "Undocumented field; not a verified minimum-advertised-price amount."
+    },
+    "average_rating": {
+      "observed_type": "str",
+      "meaning": "Average customer rating as decimal string; aggregate only."
+    },
+    "number_reviews": {
+      "observed_type": "str",
+      "meaning": "Review count as string; not review bodies."
+    },
+    "can_list": {
+      "observed_type": "str",
+      "meaning": "Listing eligibility flag."
+    },
+    "can_pickup": {
+      "observed_type": "str",
+      "meaning": "Pickup eligibility, independent of current store stock."
+    },
+    "can_ship": {
+      "observed_type": "str",
+      "meaning": "Shipping eligibility; not a delivery commitment."
+    },
+    "deck": {
+      "observed_type": "str",
+      "meaning": "Undocumented merchandising value."
+    },
+    "manufacturer_number": {
+      "observed_type": "str",
+      "meaning": "Manufacturer part/model identifier."
+    },
+    "valuable_links": {
+      "observed_type": "str",
+      "meaning": "Vendor merchandising label."
+    },
+    "shipping_days": {
+      "observed_type": "str",
+      "meaning": "Reported shipping field; undocumented semantics, not a guaranteed delivery date."
+    },
+    "upc": {
+      "observed_type": "str",
+      "meaning": "UPC identifier; preserve as string."
+    },
+    "has_proritycare_price": {
+      "observed_type": "str",
+      "meaning": "Vendor spelling retained; care-price presence flag, not quoted price."
+    },
+    "showed_proritycare_price": {
+      "observed_type": "str",
+      "meaning": "Vendor spelling retained; care-price display flag."
+    },
+    "has_member_price": {
+      "observed_type": "str",
+      "meaning": "Member-price presence flag, not a member-price amount."
+    },
+    "showed_member_price": {
+      "observed_type": "str",
+      "meaning": "Member-price display flag, not authentication or eligibility proof."
+    },
+    "z_features": {
+      "observed_type": "str",
+      "meaning": "Flattened duplicate specification string; prefer structured rows."
+    },
+    "z_features_array": {
+      "observed_type": "dict",
+      "meaning": "Structured specification rows under Root: Group, Feature, Value."
+    },
+    "key_feature_1": {
+      "observed_type": "str",
+      "meaning": "Product highlight string; order retained."
+    },
+    "key_feature_2": {
+      "observed_type": "str",
+      "meaning": "Product highlight string; order retained."
+    },
+    "key_feature_3": {
+      "observed_type": "str",
+      "meaning": "Product highlight string; order retained."
+    },
+    "key_feature_4": {
+      "observed_type": "str",
+      "meaning": "Product highlight string; order retained."
+    },
+    "key_feature_5": {
+      "observed_type": "str",
+      "meaning": "Product highlight string; order retained."
+    },
+    "category_level_1": {
+      "observed_type": "str",
+      "meaning": "Hierarchy label, short category ID and provider category ID separated by |; may be empty."
+    },
+    "category_level_2": {
+      "observed_type": "str",
+      "meaning": "Hierarchy label, short category ID and provider category ID separated by |; may be empty."
+    },
+    "category_level_3": {
+      "observed_type": "str",
+      "meaning": "Hierarchy label, short category ID and provider category ID separated by |; may be empty."
+    },
+    "category_level_4": {
+      "observed_type": "str",
+      "meaning": "Hierarchy label, short category ID and provider category ID separated by |; may be empty."
+    },
+    "category_ids": {
+      "observed_type": "str",
+      "meaning": "Provider category IDs separated by |; distinguish from short category ID754."
+    },
+    "category_path": {
+      "observed_type": "str",
+      "meaning": "Category hierarchy labels separated by |."
+    },
+    "core": {
+      "observed_type": "str",
+      "meaning": "Undocumented field."
+    },
+    "ip_buyer_code": {
+      "observed_type": "str",
+      "meaning": "Undocumented buyer metadata; preserve without assigning business semantics."
+    },
+    "x_color": {
+      "observed_type": "str",
+      "meaning": "Color terms; can describe shade more precisely than the specifications Color row."
+    },
+    "type": {
+      "observed_type": "str",
+      "meaning": "Requested handler operation: product."
+    }
+  }
+}

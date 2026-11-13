@@ -15,10 +15,7 @@
       "exact PID lookup"
     ],
     "unverified": [
-      "store quantities",
-      "store-specific prices",
-      "original shelf price",
-      "SKU field"
+      "store quantities and prices on the Discovery endpoint itself"
     ]
   },
   "storefront_fallback": {
@@ -34,6 +31,39 @@
     "price_mismatches": 1,
     "direct_http_requests": 4,
     "direct_response_bytes": 473328,
-    "native_response_bytes": 7216642
+    "native_response_bytes": 7216642,
+    "native_store_api": "Verified plain HTTP JSON; no browser or cookies"
+  },
+  "native_store_backend": {
+    "endpoint": "https://www.microcenter.com/assets/ajax/getProductAttributes.aspx",
+    "method": "POST",
+    "query": {
+      "storeid": "three-digit store ID"
+    },
+    "form": {
+      "type": "product",
+      "product_id": "numeric product ID"
+    },
+    "browser_required": false,
+    "cookies_required": false,
+    "authentication_required": false,
+    "verified": [
+      "store-sensitive availability boolean",
+      "exact store SKU",
+      "current price returned in selected store context",
+      "original price",
+      "discount",
+      "pickup/shipping eligibility",
+      "product specifications"
+    ],
+    "not_provided": [
+      "numerical stock quantity"
+    ],
+    "negative_control": "Denim660548: Santa Clara195 in_stock True; Miami185 in_stock False, ordinary cookie-free HTTP",
+    "request_headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-Requested-With": "XMLHttpRequest"
+    }
   }
 }

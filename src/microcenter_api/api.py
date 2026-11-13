@@ -1,4 +1,4 @@
-"""Optional loopback HTTP API. All browser work stays on one dedicated thread."""
+"""Optional loopback HTTP API. Upstream calls stay on one dedicated thread."""
 
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
@@ -15,7 +15,7 @@ Sku = Annotated[str, Query(pattern=r"^\d{1,8}$")]
 
 def create_app(config=None, *, client_factory=Client):
     config = config or {}
-    worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix="microcenter-browser")
+    worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix="microcenter-upstream")
     holder = {}
 
     def execute(method, kwargs):
@@ -49,8 +49,8 @@ def create_app(config=None, *, client_factory=Client):
 
     app = FastAPI(
         title="Micro Center API",
-        version="0.1.0",
-        description="Unofficial read-only public catalog. Cached, sequential, anonymously accessed.",
+        version="0.2.0",
+        description="Unofficial read-only catalog, store availability and prices. Cached, sequential, anonymously accessed.",
         lifespan=lifespan,
     )
 

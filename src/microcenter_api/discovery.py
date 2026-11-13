@@ -19,6 +19,7 @@ class DiscoveryClient:
         cache_ttl=300,
         cache_dir=None,
         fetch=None,
+        store_fetch=None,
         **kwargs,
     ):
         self.storage = Storage(
@@ -26,6 +27,9 @@ class DiscoveryClient:
         )
         self.cache_ttl = max(0, float(cache_ttl))
         self.fetch = fetch or self._http
+        from .store_api import http_attributes
+
+        self.store_fetch = store_fetch or http_attributes
         self.metrics = {"network_requests": 0, "cache_hits": 0, "response_bytes": 0}
 
     def __enter__(self):
@@ -42,7 +46,7 @@ class DiscoveryClient:
             url,
             headers={
                 "Accept": "application/json",
-                "User-Agent": "microcenter-api-cli/0.1.0",
+                "User-Agent": "microcenter-api-cli/0.2.0",
             },
         )
         try:
@@ -171,10 +175,40 @@ class DiscoveryClient:
         store=None,
         in_stock=None,
     ):
-        if store is not None or in_stock is True:
-            raise ValueError(
-                "Direct JSON catalog does not establish store inventory. Use --storefront explicitly for live store quantities."
+        if in_stock is not None and not isinstance(in_stock, bool):
+            raise ValueError("in_stock must be boolean")
+        if store is not None:
+            from .store_api import product, merge, validate_store
+
+            store = validate_store(self, store)
+            if in_stock is not None and not isinstance(in_stock, bool):
+                raise ValueError("in_stock must be boolean")
+            if re.search(r"price|saving|discount", str(sort), re.I):
+                raise ValueError(
+                    "Store search cannot globally sort native prices using catalog candidates; complete a store scan and sort its local snapshot instead"
+                )
+
+            base = self.search(
+                query, category=category, fq=fq, page=page, rpp=rpp, sort=sort
             )
+            rows = [merge(p, product(self, p["id"], store)) for p in base["products"]]
+            if in_stock is not False:
+                rows = [p for p in rows if p["stock"]["in_stock"]]
+            return {
+                **base,
+                "products": rows,
+                "returned": len(rows),
+                "candidate_returned": base["returned"],
+                "candidate_total_results": base["total_results"],
+                "candidate_sort": sort,
+                "sort_scope": "global-catalog-candidates",
+                "total_results": None,
+                "store_id": str(store).zfill(3),
+                "backend": "discovery+native-json",
+                "inventory_scope": "Store-specific availability and prices; global candidate pagination; exact quantities unavailable",
+            }
+        if in_stock is True:
+            raise ValueError("Select a store to filter local availability")
         if not isinstance(page, int) or page < 1 or (page - 1) * rpp > 10000:
             raise ValueError(
                 "Direct backend offset must be between 0 and 10000; partition large scans by category"
@@ -192,8 +226,6 @@ class DiscoveryClient:
         )
 
     def product(self, url, *, store=None):
-        if store is not None:
-            raise ValueError("Store-specific product details require --storefront")
         value = str(url)
         m = re.search(r"^https://www\.microcenter\.com/product/(\d+)(?:/|$)", value)
         pid = m[1] if m else value if value.isdigit() else None
@@ -201,6 +233,20 @@ class DiscoveryClient:
             raise ValueError(
                 "Supply a numeric product ID or canonical Micro Center product URL"
             )
+        if store is not None:
+            from .store_api import product
+
+            item = product(self, pid, store)
+            return {
+                "source": item["source"],
+                "observed_at": item["observed_at"],
+                "backend": "native-json",
+                "browser_used": False,
+                "store_id": item["store_id"],
+                "product": item,
+                "products": [item],
+                "returned": 1,
+            }
         result = self._query("*", fq='pid:"' + pid + '"', rows=1)
         exact = [p for p in result["products"] if p["id"] == pid]
         if len(exact) != 1:
@@ -224,15 +270,64 @@ class DiscoveryClient:
         data["note"] = "Store-ID directory snapshot; not inventory"
         return data
 
-    def inventory(self, *args, **kwargs):
-        raise ValueError(
-            "Store inventory is not mapped on the direct backend; use --storefront explicitly"
-        )
+    def inventory(self, sku, *, stores=None):
+        from .client import store_id
+        from .store_api import product
 
-    def compare(self, *args, **kwargs):
-        raise ValueError(
-            "SKU comparisons require store data; use --storefront explicitly"
+        if not re.fullmatch(r"\d{1,8}", str(sku)):
+            raise ValueError("Supply an exact numeric store SKU")
+        directory = self.stores()["stores"]
+        wanted = (
+            {store_id(s) for s in stores} if stores else {s["id"] for s in directory}
         )
+        if not wanted or not wanted.issubset({s["id"] for s in directory}):
+            raise ValueError("Unknown store ID")
+        first = sorted(wanted)[0]
+        candidates = self.search(str(sku), rpp=24)["products"]
+        pid = None
+        for p in candidates:
+            local = product(self, p["id"], first)
+            if local["sku"].lstrip("0") == str(sku).lstrip("0"):
+                pid = p["id"]
+                break
+        if pid is None:
+            return {
+                "sku": str(sku),
+                "status": "not_listed",
+                "stores": [],
+                "note": "No exact SKU match; no zero-stock assumption",
+            }
+        rows = []
+        for s in directory:
+            if s["id"] in wanted:
+                rows.append({"store": s, "product": product(self, pid, s["id"])})
+        return {
+            "sku": str(sku),
+            "product_id": pid,
+            "backend": "native-json",
+            "browser_used": False,
+            "stores": rows,
+            "quantity_provided": False,
+        }
+
+    def compare(self, skus, *, store=None):
+        if not 1 <= len(skus) <= 4:
+            raise ValueError("Compare one to four exact store SKUs")
+        store = "029" if store is None else store
+        rows = []
+        for sku in skus:
+            result = self.inventory(sku, stores=[store])
+            rows.append(
+                result["stores"][0]["product"]
+                if result["stores"]
+                else {"sku": str(sku), "status": "not_listed"}
+            )
+        return {
+            "products": rows,
+            "backend": "native-json",
+            "browser_used": False,
+            "quantity_provided": False,
+        }
 
     def suggest(self, *args, **kwargs):
         raise ValueError(
@@ -256,10 +351,22 @@ class DiscoveryClient:
         max_pages=1000,
         progress=None,
     ):
-        if store is not None or in_stock is True:
-            raise ValueError(
-                "Direct scans are global catalog data, not store-verified inventory. Use --storefront explicitly."
+        if store is not None:
+            from .store_api import scan
+
+            return scan(
+                self,
+                store=store,
+                query=query,
+                fq=fq,
+                category=category,
+                in_stock=in_stock,
+                checkpoint=checkpoint,
+                max_pages=max_pages,
+                progress=progress,
             )
+        if in_stock is True:
+            raise ValueError("Select a store to filter local availability")
         signature = {
             "backend": "discovery",
             "query": query or "*",

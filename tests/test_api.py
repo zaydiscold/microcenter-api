@@ -65,3 +65,47 @@ def test_upstream_access_errors_do_not_retry(error, status):
         assert r.status_code == status and Broken.calls == 1
         if status == 429:
             assert r.headers["Retry-After"] == "60"
+
+
+def test_store_product_route_uses_native_json_without_catalog_or_browser(tmp_path):
+    import json
+    from microcenter_api import Client
+
+    calls = []
+
+    def native(url, form):
+        calls.append((url, form))
+        return json.dumps(
+            {
+                "product_id": "660548",
+                "short_sku": "518159",
+                "title": "Synthetic filament",
+                "price": "10.99",
+                "original_price": "19.99",
+                "in_stock": "False",
+                "can_pickup": "True",
+                "can_ship": "True",
+            }
+        ).encode()
+
+    def factory(**config):
+        client = Client(
+            cache_dir=tmp_path,
+            store_fetch=native,
+            fetch=lambda _: pytest.fail("product route must not fetch global catalog"),
+        )
+        client.storage.wait = lambda: None
+        return client
+
+    with TestClient(create_app(client_factory=factory)) as api:
+        response = api.get("/product?url=660548&store=185")
+        assert response.status_code == 200
+        row = response.json()["product"]
+        assert row["store_id"] == "185" and row["price"] == 10.99
+        assert row["stock"]["in_stock"] is False
+        assert row["stock"]["quantity"] is None
+        assert row["can_pickup"] is True and row["browser_used"] is False
+        assert "storeid=185" in calls[0][0]
+        assert calls[0][1] == {"type": "product", "product_id": "660548"}
+        again = api.get("/product?url=660548&store=185").json()
+        assert again["product"]["cache_hit"] is True and len(calls) == 1

@@ -1,0 +1,164 @@
+{
+  "observed_date": "2026-11-12",
+  "executed_third_party_code": false,
+  "sources": [
+    {
+      "repository": "ayoTyler/StockSmart",
+      "inspected_paths": [
+        "MCSA.py",
+        "README.md"
+      ],
+      "pinned_source_base": "https://raw.githubusercontent.com/ayoTyler/StockSmart/45fcfa99da24bb1db7fc4bd5e450863702fab856/",
+      "commit_sha": "45fcfa99da24bb1db7fc4bd5e450863702fab856",
+      "tree_request_ref": "45fcfa99da24bb1db7fc4bd5e450863702fab856",
+      "commit_matches_observed_ref": true,
+      "inspected_files": [
+        {
+          "path": "MCSA.py",
+          "git_blob_sha": "0a1cf5d22f131f914e03dc23a1ff8b82cc6fe73c",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha": "fb45816c9aa712f8b36d9ce78538fe52a399094b",
+          "matches_observed_tree_entry": true
+        }
+      ]
+    },
+    {
+      "repository": "willgorman/microcenter-inventory",
+      "inspected_paths": [
+        "cody.md",
+        "main.go",
+        "config/config.go",
+        "inventory/checker_test.go",
+        "inventory/checker.go",
+        "prometheus/metrics.go",
+        "cmd/tester/main.go"
+      ],
+      "pinned_source_base": "https://raw.githubusercontent.com/willgorman/microcenter-inventory/6acf1617822bd14bb3919cc4acbe2e955e1e7438/",
+      "commit_sha": "6acf1617822bd14bb3919cc4acbe2e955e1e7438",
+      "tree_request_ref": "6acf1617822bd14bb3919cc4acbe2e955e1e7438",
+      "commit_matches_observed_ref": true,
+      "inspected_files": [
+        {
+          "path": "cody.md",
+          "git_blob_sha": "495fc44126ede68e37e6ddfc5e122d2978633ac2",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "main.go",
+          "git_blob_sha": "11efbb5b2712ce4dd28e97a332958f53dfe2b084",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "config/config.go",
+          "git_blob_sha": "3a6efa113f5bb88347c2346acab83dfde1f72245",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "inventory/checker_test.go",
+          "git_blob_sha": "c68bd34f9bfd85bf3c33ee7b94661dc7aff87003",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "inventory/checker.go",
+          "git_blob_sha": "099e5f165d5c3149817bdcf9542b52523444362e",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "prometheus/metrics.go",
+          "git_blob_sha": "dfda0fcf792e657bf501e701c22490b6afeb0db6",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "cmd/tester/main.go",
+          "git_blob_sha": "3ddd8f78e28077ac6f83d439097460a0738d8c28",
+          "matches_observed_tree_entry": true
+        }
+      ]
+    },
+    {
+      "repository": "wonsong82/microcenter_finder",
+      "inspected_paths": [
+        "webpack.mix.js",
+        "public/js/app.js",
+        "resources/assets/js/bootstrap.js",
+        "resources/assets/js/app.js"
+      ],
+      "pinned_source_base": "https://raw.githubusercontent.com/wonsong82/microcenter_finder/b43bc49454a74930dfe23ffd205340c2e59b0d8a/",
+      "commit_sha": "b43bc49454a74930dfe23ffd205340c2e59b0d8a",
+      "tree_request_ref": "b43bc49454a74930dfe23ffd205340c2e59b0d8a",
+      "commit_matches_observed_ref": true,
+      "inspected_files": [
+        {
+          "path": "webpack.mix.js",
+          "git_blob_sha": "72fdbb16d60bc782872e660222b44ef9ab2a16c1",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "public/js/app.js",
+          "git_blob_sha": "90b4b14cd1a614e9de530dd2ce809b2286563bdf",
+          "matches_observed_tree_entry": false,
+          "note": "Only the first 200000 bytes were downloaded; partial source inspection, not a verified full-file hash."
+        },
+        {
+          "path": "resources/assets/js/bootstrap.js",
+          "git_blob_sha": "fb0f1eded3940cc80e490d7057ac623f7f1fa520",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "resources/assets/js/app.js",
+          "git_blob_sha": "98eca79fdf205b027d0aa11d2cad84b1ab872977",
+          "matches_observed_tree_entry": true
+        }
+      ]
+    },
+    {
+      "repository": "darakelian/MCStockCheckerBot",
+      "inspected_paths": [
+        "README.md",
+        "main.py"
+      ],
+      "pinned_source_base": "https://raw.githubusercontent.com/darakelian/MCStockCheckerBot/7f95fcb50f6b1770b7f65d9030a10c893262bc79/",
+      "commit_sha": "7f95fcb50f6b1770b7f65d9030a10c893262bc79",
+      "tree_request_ref": "7f95fcb50f6b1770b7f65d9030a10c893262bc79",
+      "commit_matches_observed_ref": true,
+      "inspected_files": [
+        {
+          "path": "README.md",
+          "git_blob_sha": "025513dd5df0b125fefcc259cf41b56ac5a5ee7b",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "main.py",
+          "git_blob_sha": "1eb88612b72a83bb840e56fa4d18937c73263502",
+          "matches_observed_tree_entry": true
+        }
+      ]
+    },
+    {
+      "repository": "ethanbeauc/microcenter-notify",
+      "inspected_paths": [
+        "README.md",
+        "scrape.py"
+      ],
+      "pinned_source_base": "https://raw.githubusercontent.com/ethanbeauc/microcenter-notify/70ccb6c0ee6953755abcfca49d6299ab90c1c95a/",
+      "commit_sha": "70ccb6c0ee6953755abcfca49d6299ab90c1c95a",
+      "tree_request_ref": "70ccb6c0ee6953755abcfca49d6299ab90c1c95a",
+      "commit_matches_observed_ref": true,
+      "inspected_files": [
+        {
+          "path": "README.md",
+          "git_blob_sha": "6fb79ac0928fa18a6b475351331963bb35fa6334",
+          "matches_observed_tree_entry": true
+        },
+        {
+          "path": "scrape.py",
+          "git_blob_sha": "b95ea220a18f40d3454b98476b38fe947af05f7e",
+          "matches_observed_tree_entry": true
+        }
+      ]
+    }
+  ]
+}

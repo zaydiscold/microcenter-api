@@ -1,0 +1,239 @@
+{
+  "observed_date": "2026-11-12",
+  "scope": "Public first-party JavaScript route references. This list is not exhaustive and source presence does not prove a working endpoint.",
+  "surfaces": [
+    {
+      "path": "/assets/ajax/getProductAttributes.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "verified native JSON POST, type=product only",
+      "usage": "default store availability/pricing"
+    },
+    {
+      "path": "/store/add_productAjax.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not exercised in this follow-up",
+      "usage": "mutation/reporting surface; excluded from read-only SDK"
+    },
+    {
+      "path": "/store/add_protectionPlanAjax.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not exercised in this follow-up",
+      "usage": "mutation/reporting surface; excluded from read-only SDK"
+    },
+    {
+      "path": "/assets/ajax/epid.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/assets/ajax/autosuggest.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "previous HTML test; no verified direct JSON contract",
+      "usage": "optional legacy storefront lookup"
+    },
+    {
+      "path": "/store/add_product.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5",
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_9"
+      ],
+      "status": "source-discovered; not exercised in this follow-up",
+      "usage": "mutation/reporting surface; excluded from read-only SDK"
+    },
+    {
+      "path": "/assets/ajax/storeZipCode.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "previous HTML test; no verified direct JSON contract",
+      "usage": "optional legacy storefront lookup"
+    },
+    {
+      "path": "/endeca/compare.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "legacy source route; prior test failed",
+      "usage": "not used; SDK composes exact SKU lookups"
+    },
+    {
+      "path": "/assets/ajax/StoreDistanceCheck.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/store/getcartproducts.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/assets/ajax/recommendationList.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/assets/ajax/recommendationPathwaysList.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/assets/ajax/BannerX.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "previous response HTTP200 JSON",
+      "usage": "advertising, not a quantity pricing service"
+    },
+    {
+      "path": "/assets/ajax/EpsilonReporting.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_5"
+      ],
+      "status": "source-discovered; not exercised in this follow-up",
+      "usage": "mutation/reporting surface; excluded from read-only SDK"
+    },
+    {
+      "path": "/assets/ajax/ConfiguratorProAssembly.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_9"
+      ],
+      "status": "source-discovered; not exercised in this follow-up",
+      "usage": "configurator handler; side effects unverified; excluded from read-only SDK"
+    },
+    {
+      "path": "/assets/ajax/ConfiguratorProAssembly2025.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_9"
+      ],
+      "status": "source-discovered; not exercised in this follow-up",
+      "usage": "configurator handler; side effects unverified; excluded from read-only SDK"
+    },
+    {
+      "path": "/endeca/AjaxConfigurator.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_9"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/endeca/AjaxConfigurator2020.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_9"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/endeca/AjaxConfigurator2023.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_9"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/endeca/AjaxConfiguratorAsus.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_9"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/search/search_results.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/endeca/AjaxResults.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "verified HTML fragment; plain HTTP AJAX also succeeded",
+      "usage": "explicit HTML path, excluded from API-only scan"
+    },
+    {
+      "path": "/ajaxcategory/",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/assets/ajax/advancedsearch.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/assets/ajax/advancedsearchbr.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/productstation/results.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/search/builds.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/endeca/AjaxBuildResults.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopAsyncJScompiledProduct2022_12"
+      ],
+      "status": "source-discovered; not verified",
+      "usage": "not used by the default JSON client"
+    },
+    {
+      "path": "/assets/ajax/StoreChange.aspx",
+      "source_urls": [
+        "https://www.microcenter.com/bundles/js/DesktopJScompiled_4"
+      ],
+      "status": "verified HTML store directory; plain HTTP AJAX also succeeded",
+      "usage": "bundled snapshot, not native JSON"
+    }
+  ]
+}

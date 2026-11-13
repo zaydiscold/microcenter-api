@@ -2,113 +2,114 @@ i just really wanted 3d printing filament man
 
 # Micro Center API & CLI
 
-A direct JSON client for Micro Center's public Bloomreach Discovery catalog, with a separately enabled storefront adapter for local inventory. Unofficial; not affiliated with Micro Center.
+Unofficial JSON API client, Python SDK and CLI for Micro Center's catalog, store availability and current prices. **Default operations use ordinary HTTP: no browser, login, cookies, API keys or HTML parsing.** Not affiliated with Micro Center.
 
-**The default path uses ordinary HTTPS. No browser, cookies, API key, Cloudflare workaround, or account login.**
+## Install
 
 ```sh
 pip install 'microcenter-api-cli[api] @ git+https://github.com/zaydiscold/microcenter-api.git'
 microcenter search filament --rpp 200
-microcenter search --category 754 --rpp 200
-microcenter product 660548
-microcenter --output filament.json scan --category 754 --checkpoint scan-filament.json
+microcenter product 660548 --store 195
+microcenter inventory 518159 --stores 195 185
 microcenter serve
 # http://127.0.0.1:8766/docs and /openapi.json
 ```
 
-Python 3.10+. For a source checkout, use `pip install -e '.[api,dev]'`.
+Python 3.10+. From a checkout: `pip install -e '.[api,dev]'`.
 
-## The actual backend
+## Two actual JSON backends
 
-`GET https://core.dxpapi.com/api/v1/core/`
-
-Public storefront configuration exposes Discovery account `7835`. Catalog/domain `microcenter` was verified by a successful unauthenticated product search. `auth_key` is empty, matching Bloomreach's documented client-side convention. These account/catalog identifiers are not private API credentials.
-
-```sh
-curl --get 'https://core.dxpapi.com/api/v1/core/' \
-  --data-urlencode 'account_id=7835' \
-  --data-urlencode 'domain_key=microcenter' \
-  --data-urlencode 'auth_key=' \
-  --data-urlencode 'request_type=search' \
-  --data-urlencode 'search_type=category' \
-  --data-urlencode 'q=754' \
-  --data-urlencode 'fl=pid,title,brand,price,sale_price,thumb_image,url,category_flat' \
-  --data-urlencode 'rows=200' \
-  --data-urlencode 'start=0' \
-  --data-urlencode 'url=https://www.microcenter.com/'
-```
-
-The response includes products, total count, offset, facets and category metadata. Search uses `search_type=keyword`; category lookup uses `search_type=category` and the category ID as `q`. `fq` carries real facet expressions; `sort=pid asc` gives stable ID ordering. Exact product lookup uses `fq=pid:"660548"` and verifies the returned ID.
-
-## Catalog data is not store inventory
-
-This distinction is enforced in code:
-
-| Capability | Direct JSON backend | Explicit storefront fallback |
+| Purpose | Endpoint | Verified data |
 |---|---|---|
-| Keywords, categories, facets, product IDs, images | Verified | Verified |
-| Catalog price | Verified | Public store-specific display |
-| Santa Clara stock quantities | **Not mapped** | Verified |
-| Original shelf price and sale savings | **Not provided reliably** | Verified |
-| Store SKU, pickup/shipping flags, color variant links | Not verified | Available where published |
-| Browser required | **No** | Yes |
+| Catalog discovery | GET `https://core.dxpapi.com/api/v1/core/` | Product IDs, names, catalog prices, images, category and facets; up to 200 products per call |
+| Store product lookup | POST `https://www.microcenter.com/assets/ajax/getProductAttributes.aspx?storeid=195` | Exact SKU, current price, original price, discount, **store-specific in-stock flag**, eligibility and specs |
 
-The live comparison found all 647 Santa Clara listing IDs in the 749-item global filament catalog, but one starter pack's global price was $36.99 while Santa Clara displayed $31.96. Therefore direct results never pretend to be store-priced or locally in stock. Unknown stock, SKU, original price and savings stay null. `--store 195` on a direct query fails with a clear explanation, rather than silently attaching a store label to global data.
-
-There is no proven direct JSON endpoint for local stock quantities in this release. `microcenter-api.bloomreach.co` observed in the storefront is an Engagement/analytics host, not established as the inventory API. Passing `view_id=195` produced a valid response but did not establish local inventory semantics; the toolkit does not use that guess.
-
-## Efficient, modest collection
-
-Default request spacing is **4–5 seconds**, sequentially, shared through SQLite across processes using the same cache directory. Parsed responses have a 5-minute local cache with original observation timestamps. `--cache-ttl 0` requests fresh data. No automatic retry on access denial or rate limiting; a 429 surfaces `Retry-After` and stops. No proxy rotation, private-key discovery, challenge solving, or account access.
-
-A complete 749-item filament/resin catalog took **four direct JSON requests**, about **473 KB** total. The separate 647-item store verification used seven HTML responses totaling about **7.2 MB**. Those datasets have different scopes; this is a measured payload comparison, not a promise of equivalent store stock.
-
-Scans checkpoint after each successful page, validate unique IDs against the advertised total, and resume when the same command is repeated. A short/clamped page or repeated page cannot become a successful complete scan. The direct backend has a documented maximum `start` offset of 10,000; broad scans above that limit are refused with instructions to partition by category. The client does not claim an entire chain-wide inventory dump from one paginated query.
+The native product endpoint works with these normal AJAX request headers and form fields:
 
 ```sh
-microcenter --output filament.json scan --category 754 --checkpoint scan-filament.json
-microcenter --format csv --output silk.csv filter filament.json --query silk
-microcenter filter filament.json --query matte --max-price 16
+curl 'https://www.microcenter.com/assets/ajax/getProductAttributes.aspx?storeid=195' \
+  -H 'Accept: application/json' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'X-Requested-With: XMLHttpRequest' \
+  --data 'type=product&product_id=660548'
 ```
 
-Local filtering makes zero network requests. Direct catalog data cannot establish `--sale`: it has no trustworthy original-price field. Use a store-verified snapshot for sale filtering. Listing prices are per item, not automatically per kilogram; sample coils and 500 g spools are identified in their names.
+No cookies, Authorization header, browser session, Cloudflare clearance or private key are supplied. Changing only `storeid` from `195` (Santa Clara) to `185` (Miami) changed this product's `in_stock` from `True` to `False` in direct HTTP verification. The public preference cookie `storeSelected` was tested separately and also worked, but the client does not need or send it.
 
-## Optional store verification
+**Stock is a boolean, not a unit count.** The native JSON endpoint does not return the `6` or `25+` shown in storefront HTML. The client leaves `stock.quantity` null and sets `quantity_provided: false`. `can_pickup`/`can_ship` are eligibility flags and must not be mistaken for in-stock status.
+
+Native prices take precedence over catalog prices. The starter pack `692941` returned $31.96 and original price $49.99 from the native API, while the Discovery catalog returned $36.99. This proves a real pricing-source discrepancy; the tested pack had the same native price in the tested stores, so no cross-store price difference is claimed. Store ID is part of every native request and cache key.
+
+## Scan a store, then search locally
+
+```sh
+# All global filament/resin candidates: 749 at the initial observation.
+microcenter --output catalog.json scan --category 754 --checkpoint scan-catalog.json
+
+# Verify every candidate through the native JSON endpoint for Santa Clara.
+microcenter --output santa-clara.json scan --store 195 --category 754 --checkpoint scan-santa-clara.json
+
+# Resume by repeating the same command after an interruption.
+# Include unavailable entries in output when desired:
+microcenter --output all-statuses.json scan --store 195 --category 754 --include-out-of-stock --checkpoint scan-all-statuses.json
+
+# Local operations make zero network requests.
+microcenter filter santa-clara.json --query matte --sale --max-price 16
+microcenter --format csv --output silk.csv filter santa-clara.json --query silk --sale
+microcenter --output colors.html gallery santa-clara.json --images catalog.json
+```
+
+Global discovery is batched; **native stock verification is one request per product**. Three tested batch parameter shapes returned no products, so the toolkit does not pretend they work. Defaults are one request every **4–5 seconds**, sequentially. A full 749-candidate verification takes roughly an hour at that pace; narrow by category/query for everyday use. `--delay` and `--jitter` configure modest pacing; delays below one second are clamped. Pacing is shared across processes using the same cache directory.
+
+Parsed observations have a 5-minute disk cache with original timestamps. `--cache-ttl 0` requests fresh observations. A 403/challenge or 429 stops without automatic retries; 429 surfaces `Retry-After`. No identity rotation or challenge solving. Do not use separate cache directories to defeat pacing.
+
+Store scan checkpoints use a small atomic manifest and one observation file per product in the adjacent `.items` directory. Each result is written once rather than repeatedly rewriting the entire growing inventory. Keep the manifest, `.items` directory and `.catalog.json` together to resume. The final `--output` JSON is self-contained. A scan is complete only after every unique catalog candidate has been verified. It is an observation window, not a transactional stock snapshot.
+
+The direct discovery backend has a maximum `start` offset of 10,000. Broad scans exceeding that limit are refused; partition by category rather than accepting a truncated catalog. No complete all-category Santa Clara capture is claimed from the initial prototype.
+
+## Search pagination and identity
+
+```sh
+microcenter search --category 754 --store 195 --rpp 10
+microcenter search 'RTX 5070' --store 101 --rpp 5
+microcenter product 660548 --store 195
+microcenter compare 518159 330472 --store 195
+```
+
+A store search first gets a global candidate page, then looks up each candidate through native JSON. Filtering that page to in-stock items does not establish a total for the entire store. The response therefore carries `candidate_total_results`, `candidate_returned`, a local `returned`, and `total_results: null`. Offsets/pages refer to global candidates. Store-scoped price sorting is rejected because sorting stale catalog candidates cannot establish global native-price order. Use a complete store scan and offline filtering/sorting for local totals and prices. Store searches take one native request per candidate; large page sizes can be slow.
+
+Product IDs and store SKUs differ: Denim is product `660548`, SKU `518159`. SKU inventory verifies the returned `short_sku`, so fuzzy search cannot substitute another product. `not_listed` means no exact match was established, not a zero-stock result. An explicit false native flag means out of stock at that selected store.
+
+Catalog-only data has no trustworthy original-price field. `filter --sale` refuses a catalog-only snapshot rather than claiming no products are discounted. Prices are per listed item, before tax, not automatically per kg; watch 500 g rolls and sample coils.
+
+## Python SDK and JSON API
+
+```python
+from microcenter_api import Client
+
+with Client() as client:
+    catalog = client.search('matte PLA', rpp=200)
+    denim = client.product('660548', store='195')
+    stock = client.inventory('518159', stores=['195', '185'])
+```
+
+`microcenter serve` binds to loopback. Routes: `/health`, `/stores`, `/categories`, `/search`, `/product`, `/inventory`, `/compare`, `/suggest`, `/nearby`; interactive docs at `/docs`, schema at `/openapi.json`. Product example: `/product?url=660548&store=195`. Inventory store lists use repeated `stores` query parameters. Scans run through the CLI, not long web requests. Upstream work is serialized. `/health` checks process health, not upstream access.
+
+Input errors return 422, upstream access denial 503, rate limiting 429 and other upstream/parser errors 502. Default autocomplete and nearby-store provider endpoints are not yet mapped; those calls explain the limitation rather than opening a browser.
+
+`stores` is a labeled directory snapshot: 31 physical stores plus shipping (`029`). `categories` returns global discovery facets, not local availability. Category facet enumeration is not claimed exhaustive.
+
+## Optional legacy HTML adapter
+
+`StorefrontClient` and `--storefront` remain explicit options for storefront-only fields, including displayed unit counts and native variant links. They are **not required for store availability or pricing**.
 
 ```sh
 pip install 'microcenter-api-cli[storefront] @ git+https://github.com/zaydiscold/microcenter-api.git'
 playwright install chromium
 microcenter --storefront search 'matte PLA' --store 195
-microcenter --storefront inventory 518159 --stores 195 101 029
-microcenter --storefront product 'https://www.microcenter.com/product/660548/inland-175mm-pla-3d-printer-filament-1kg-(22-lbs)-cardboard-spool-matte-denim' --store 195
-microcenter --storefront --output local-filament.json scan --store 195 --category 754 --checkpoint scan-local-filament.json
-microcenter filter local-filament.json --query matte --sale --max-price 16
-microcenter --output colors.html gallery local-filament.json --images filament.json
 ```
 
-The offline photo gallery can use `--images` to take image URLs from a direct catalog snapshot, joined by exact product ID. This keeps store prices and stock from the verified local snapshot while using the public CDN images returned by Discovery. The `productimages.microcenter.com` host returned 403 in the verification environment; the corresponding Discovery rackcdn image returned 200.
-
-The storefront adapter uses a separate anonymous Chromium context and a public HTML fragment endpoint. It is explicitly a browser-backed scraper, not the direct API. Default Chromium launch requires Playwright's browser installation; `--headed` opens a visible window if a normal session needs inspection. Access denial stops the collector.
-
-Advanced: `--storefront --cdp-url http://127.0.0.1:9222` attaches through a minimal loopback-only CDP transport and creates its own context, without enumerating user tabs or copying login cookies. It closes only its context. Default direct mode ignores browser transport settings because it never creates a browser.
-
-`stores` returns a labeled store-ID directory snapshot (31 physical stores plus `029` shipping). For refreshed nearby-store data, keyword suggestions, exact-SKU comparisons or native color variant links, explicitly select `--storefront`. Store SKU and product ID differ: Denim is SKU `518159`, product ID `660548`. Stock `25+` is a lower bound; a shipping lead time is not a quantity.
-
-## Python SDK
-
-```python
-from microcenter_api import Client, StorefrontClient
-
-with Client() as catalog:
-    products = catalog.search('matte PLA', rpp=200)
-    item = catalog.product('660548')
-
-# Explicit opt-in, requires the storefront extra and Chromium.
-with StorefrontClient() as storefront:
-    stock = storefront.inventory('518159', stores=['195', '101'])
-```
-
-Clients belong to the creating thread. The optional FastAPI service serializes work on one browser/client worker automatically. The HTTP service binds to `127.0.0.1`; it is not deployed publicly by default. `/health` checks process health, not upstream availability. Routes: `/stores`, `/categories`, `/search`, `/product`, `/inventory`, `/compare`, `/suggest`, `/nearby`. Unsupported store-specific direct calls return 422 with an explanation; the service never launches a browser as a hidden fallback. Input errors return 422, upstream access denials 503, upstream rate limits 429, other upstream/parser failures 502. `/docs` and `/openapi.json` describe the current request interface. Run `microcenter --storefront serve` only if you want the optional browser adapter behind the same routes.
+This adapter parses HTML in a separate anonymous browser context and stops on denial. Advanced loopback CDP mode creates only its own context without enumerating user tabs or copying cookies. The default JSON paths never invoke it.
 
 ## Development and evidence
 
@@ -118,6 +119,13 @@ pytest
 python -m build
 ```
 
-CI uses synthetic data and fake transports, never live scraping. See [API discovery evidence](docs/api-map.md), [testing](TESTING.md), and [contributing](CONTRIBUTING.md). The full Santa Clara all-category scan was stopped incomplete; no complete 16,895-item capture is claimed. The filament-only store scan and direct global filament scan completed and were compared by exact product ID.
+CI uses synthetic fixtures and fake transports, not live scraping. [Discovery evidence and request contracts](docs/api-map.md), [testing](TESTING.md), [contributing](CONTRIBUTING.md).
 
-No account, cart mutation, checkout, reservation, coupon redemption, text sending or payment API is exposed. Public data and access policies may change. MIT covers original code only; vendor names, images and product data remain their owners' content. Complete vendor scripts and customer/browser state are not redistributed.
+No cart mutation, checkout, reservation, coupon redemption, SMS, account records or payment API is exposed. Original code is MIT licensed; vendor names/images/product data remain their owners' content. Private keys, browser profiles, cookies, complete vendor bundles and local inventory snapshots are not redistributed.
+
+## Research and endpoint coverage
+
+- [Verified contracts and reproducible evidence](docs/api-map.md), with the [machine-readable endpoint contracts](docs/endpoints.json)
+- [Every observed native product field](docs/native-fields.md) and [machine-readable field map](docs/native-fields.json)
+- [Source-discovered route inventory with confidence labels](docs/endpoint-surfaces.json)
+- [Existing API/MCP services and open-source clients](docs/related-projects.md), with [pinned source records](docs/research-sources.json)

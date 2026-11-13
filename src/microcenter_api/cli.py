@@ -179,7 +179,9 @@ def main():
             return
         if "include_out_of_stock" in args:
             include = args.pop("include_out_of_stock")
-            args["in_stock"] = (not include) if storefront else None
+            args["in_stock"] = (
+                (not include) if storefront or args.get("store") is not None else None
+            )
         if storefront:
             if "category" in args:
                 category = args.pop("category")
@@ -189,11 +191,15 @@ def main():
                 args["store"] = "195"
         with (StorefrontClient if storefront else Client)(**config) as client:
             if command == "scan":
-                args["progress"] = lambda state: print(
-                    f"page={state['pages'][-1]['page']} unique={state['returned']} advertised={state.get('advertised_in_stock', state.get('total_results'))} complete={state['complete']}",
-                    file=sys.stderr,
-                    flush=True,
-                )
+
+                def report(state):
+                    if "checked" in state:
+                        message = f"checked={state['checked']}/{state['candidate_total']} in_stock={state['in_stock_count']} complete={state['complete']}"
+                    else:
+                        message = f"page={state['pages'][-1]['page']} unique={state['returned']} advertised={state.get('advertised_in_stock', state.get('total_results'))} complete={state['complete']}"
+                    print(message, file=sys.stderr, flush=True)
+
+                args["progress"] = report
             result = getattr(client, command)(**args)
             if command == "scan":
                 result["metrics"] = client.metrics

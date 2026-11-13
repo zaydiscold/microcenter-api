@@ -52,9 +52,7 @@ def test_default_client_is_direct_and_cached(tmp_path):
     )
 
 
-@pytest.mark.parametrize(
-    "kwargs", [{"store": "195"}, {"in_stock": True}, {"rpp": 201}, {"page": 1000}]
-)
+@pytest.mark.parametrize("kwargs", [{"in_stock": True}, {"rpp": 201}, {"page": 1000}])
 def test_no_unverified_store_scope_or_unbounded_offset(tmp_path, kwargs):
     c = Client(cache_dir=tmp_path, fetch=lambda _: pytest.fail("must not call backend"))
     with pytest.raises(ValueError):
